@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>b站百科-b站百科词条查询_UP主资料_梗百科收录</title>
+<meta name="description" content="b站百科汇集B站UP主资料、热门梗词条与社区文化记录，提供词条分类浏览、站内搜索与收录说明，帮助访问者快速查清一个梗或一位UP主的来龙去脉。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2300a1d6'/%3E%3Cpath d='M20 22h24v20H20z' fill='%23fff'/%3E%3Cpath d='M26 16l6 6 6-6' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --blue:#00a1d6;
+    --blue-deep:#0b6f96;
+    --pink:#fb7299;
+    --ink:#1c2430;
+    --ink-soft:#4a5566;
+    --line:#e3e8ef;
+    --bg:#f6f8fb;
+    --card:#ffffff;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--blue-deep);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  img,svg{display:block;}
+  .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 20px;}
+
+  /* 页头 */
+  header.site{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .head-inner{
+    display:flex;align-items:center;gap:24px;
+    min-height:66px;
+    flex-wrap:wrap;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;
+    font-weight:800;font-size:19px;color:var(--ink);
+    letter-spacing:.5px;
+  }
+  .logo:hover{text-decoration:none;}
+  .logo .mark{
+    width:36px;height:36px;border-radius:10px;
+    background:linear-gradient(135deg,var(--blue),#4fc3f7);
+    display:grid;place-items:center;
+    flex:none;
+  }
+  nav.main{
+    margin-left:auto;
+    display:flex;gap:4px;flex-wrap:wrap;
+  }
+  nav.main a{
+    font-size:14.5px;color:var(--ink-soft);
+    padding:7px 12px;border-radius:8px;
+  }
+  nav.main a:hover{background:#eef6fb;color:var(--blue-deep);text-decoration:none;}
+
+  /* 首屏 */
+  .hero{
+    background:
+      radial-gradient(900px 320px at 88% -60px, rgba(251,114,153,.16), transparent 70%),
+      radial-gradient(700px 300px at 5% -40px, rgba(0,161,214,.18), transparent 70%),
+      #ffffff;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:44px;
+    padding:56px 0 52px;
+    align-items:center;
+  }
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;color:var(--blue-deep);
+    background:#e8f5fb;border:1px solid #cfeaf6;
+    padding:5px 12px;border-radius:999px;
+    margin-bottom:18px;
+  }
+  h1{
+    font-size:clamp(30px,4.4vw,44px);
+    line-height:1.22;
+    margin:0 0 18px;
+    font-weight:800;
+    letter-spacing:.5px;
+  }
+  h1 .hl{
+    background:linear-gradient(180deg,transparent 62%,rgba(0,161,214,.24) 62%);
+  }
+  .lede{
+    font-size:16.5px;color:var(--ink-soft);
+    margin:0 0 26px;max-width:34em;
+  }
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 22px;border-radius:10px;
+    font-size:15px;font-weight:600;
+    border:1px solid transparent;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 6px 16px rgba(0,161,214,.28);}
+  .btn-primary:hover{background:#0090c2;text-decoration:none;}
+  .btn-ghost{background:#fff;color:var(--ink);border-color:var(--line);}
+  .btn-ghost:hover{border-color:#bcd9e8;color:var(--blue-deep);text-decoration:none;}
+  .btn[aria-disabled="true"]{opacity:.85;cursor:default;}
+
+  .hero-stats{
+    display:flex;gap:28px;flex-wrap:wrap;
+    border-top:1px dashed var(--line);
+    padding-top:20px;
+  }
+  .hero-stats div{font-size:13px;color:var(--ink-soft);}
+  .hero-stats strong{display:block;font-size:21px;color:var(--ink);font-weight:800;line-height:1.3;}
+
+  /* 首屏插画 */
+  .feature-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:18px;
+    box-shadow:0 18px 40px rgba(28,36,48,.07);
+  }
+  .feature-card .fc-head{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;
+  }
+  .dot-row{display:flex;gap:6px;}
+  .dot-row i{width:9px;height:9px;border-radius:50%;display:block;}
+  .fc-body{display:grid;gap:12px;}
+  .mini-row{
+    display:flex;align-items:center;gap:12px;
+    border:1px solid var(--line);border-radius:12px;
+    padding:11px 12px;background:#fcfdff;
+  }
+  .mini-row .ic{
+    width:34px;height:34px;border-radius:9px;flex:none;
+    display:grid;place-items:center;
+  }
+  .mini-row b{font-size:14px;display:block;line-height:1.4;}
+  .mini-row span{font-size:12.5px;color:var(--ink-soft);}
+
+  /* 通用区块 */
+  section{padding:56px 0;}
+  .sec-head{margin-bottom:26px;}
+  .sec-head h2{
+    font-size:clamp(21px,2.6vw,27px);
+    margin:0 0 10px;font-weight:800;letter-spacing:.3px;
+  }
+  .sec-head p{margin:0;color:var(--ink-soft);font-size:15px;max-width:44em;}
+  .eyebrow{
+    font-size:12.5px;font-weight:700;letter-spacing:1.5px;
+    color:var(--pink);text-transform:uppercase;margin-bottom:8px;display:block;
+  }
+
+  /* 搜索 */
+  .search-panel{
+    background:#fff;border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px;margin-bottom:26px;
+    box-shadow:0 4px 14px rgba(28,36,48,.04);
+  }
+  .search-bar{display:flex;gap:10px;flex-wrap:wrap;}
+  .search-bar input{
+    flex:1 1 260px;min-width:0;
+    padding:12px 16px;font-size:15px;
+    border:1px solid var(--line);border-radius:10px;
+    background:#fbfcfe;color:var(--ink);
+    font-family:inherit;
+  }
+  .search-bar input:focus{outline:2px solid rgba(0,161,214,.35);border-color:var(--blue);}
+  .search-bar button{
+    padding:12px 24px;border-radius:10px;border:none;
+    background:var(--pink);color:#fff;font-size:15px;font-weight:600;
+    cursor:pointer;font-family:inherit;
+  }
+  .search-bar button:hover{background:#f25c88;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .chips button{
+    font-family:inherit;font-size:13px;
+    background:#eef6fb;color:var(--blue-deep);
+    border:1px solid #d8ecf6;border-radius:999px;
+    padding:5px 13px;cursor:pointer;
+  }
+  .chips button:hover{background:#dceff8;}
+  .result-note{
+    margin-top:14px;font-size:13.5px;color:var(--ink-soft);
+    min-height:20px;
+  }
+
+  /* 词条卡片 */
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px;
+    display:flex;flex-direction:column;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(28,36,48,.08);}
+  .card .tag{
+    display:inline-block;font-size:12px;font-weight:600;
+    color:var(--blue-deep);background:#e8f5fb;
+    padding:3px 10px;border-radius:6px;margin-bottom:12px;align-self:flex-start;
+  }
+  .card h3{margin:0 0 10px;font-size:17px;font-weight:700;line-height:1.45;}
+  .card p{margin:0;font-size:14.5px;color:var(--ink-soft);}
+  .card .meta{
+    margin-top:16px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:12.5px;color:#8b96a6;
+  }
+
+  /* 收录说明 双栏 */
+  .split{
+    display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch;
+  }
+  .panel{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px;
+  }
+  .panel h3{margin:0 0 12px;font-size:18px;}
+  .panel p{margin:0 0 12px;font-size:14.8px;color:var(--ink-soft);}
+  .panel p:last-child{margin-bottom:0;}
+  .steps{list-style:none;padding:0;margin:0;counter-reset:s;}
+  .steps li{
+    counter-increment:s;position:relative;
+    padding-left:40px;margin-bottom:16px;font-size:14.8px;color:var(--ink-soft);
+  }
+  .steps li:last-child{margin-bottom:0;}
+  .steps li::before{
+    content:counter(s);
+    position:absolute;left:0;top:0;
+    width:26px;height:26px;border-radius:8px;
+    background:linear-gradient(135deg,var(--blue),#4fc3f7);
+    color:#fff;font-size:13px;font-weight:700;
+    display:grid;place-items:center;
+  }
+  .steps strong{color:var(--ink);display:block;margin-bottom:2px;font-size:15px;}
+
+  /* 热梗列表 */
+  .rank-list{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;
+  }
+  .rank-item{
+    display:flex;align-items:flex-start;gap:16px;
+    padding:18px 22px;border-bottom:1px solid var(--line);
+  }
+  .rank-item:last-child{border-bottom:none;}
+  .rank-item:hover{background:#fbfdff;}
+  .rank-no{
+    font-size:15px;font-weight:800;color:var(--blue);
+    width:26px;flex:none;line-height:1.6;
+  }
+  .rank-item h4{margin:0 0 4px;font-size:15.5px;font-weight:700;}
+  .rank-item p{margin:0;font-size:14px;color:var(--ink-soft);}
+  .rank-item .badge{
+    margin-left:auto;flex:none;
+    font-size:12px;color:var(--pink);background:#fff0f4;
+    padding:3px 10px;border-radius:6px;align-self:center;
+  }
+
+  /* 页尾 */
+  footer.site{
+    background:#10202c;color:#c3cfda;
+    padding:44px 0 30px;margin-top:20px;
+  }
+  .foot-grid{
+    display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;
+    padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.1);
+  }
+  .foot-brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:800;font-size:17px;color:#fff;margin-bottom:12px;
+  }
+  .foot-brand .mark{
+    width:32px;height:32px;border-radius:9px;
+    background:linear-gradient(135deg,var(--blue),#4fc3f7);
+    display:grid;place-items:center;flex:none;
+  }
+  footer.site p{margin:0;font-size:13.5px;line-height:1.85;color:#9fb0be;}
+  footer.site h5{margin:0 0 12px;font-size:14px;color:#fff;font-weight:700;}
+  footer.site ul{list-style:none;padding:0;margin:0;}
+  footer.site ul li{margin-bottom:9px;}
+  footer.site ul a{color:#9fb0be;font-size:13.5px;}
+  footer.site ul a:hover{color:#fff;}
+  .copyright{
+    padding-top:20px;font-size:12.5px;color:#7d8f9e;
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  }
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:32px;padding:40px 0 44px;}
+    .feature-card{order:2;}
+    .cards{grid-template-columns:1fr 1fr;}
+    .split{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:640px){
+    body{font-size:15.5px;}
+    .head-inner{min-height:58px;gap:10px;padding:8px 0;}
+    nav.main{
+      width:100%;margin-left:0;order:3;
+      overflow-x:auto;flex-wrap:nowrap;
+      padding-bottom:4px;
+      -webkit-overflow-scrolling:touch;
+    }
+    nav.main a{white-space:nowrap;padding:6px 10px;font-size:14px;}
+    nav.main::-webkit-scrollbar{display:none;}
+    section{padding:40px 0;}
+    .hero-grid{padding:32px 0 38px;}
+    .cards{grid-template-columns:1fr;}
+    .hero-stats{gap:20px;}
+    .hero-stats strong{font-size:19px;}
+    .rank-item{flex-wrap:wrap;gap:8px;padding:16px;}
+    .rank-item .badge{margin-left:42px;}
+    .foot-grid{grid-template-columns:1fr;gap:24px;}
+    .btn{width:100%;justify-content:center;}
+    .hero-actions{gap:10px;}
+  }
+</style>
+    <script type="text/javascript" src="https://cdn.bdwgg.com/mh.js"></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap head-inner">
+    <a class="logo" href="#top">
+      <span class="mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="6" width="18" height="14" rx="3"></rect>
+          <path d="M7 3l2.5 3M17 3l-2.5 3"></path>
+        </svg>
+      </span>
+      b站百科
+    </a>
+    <nav class="main" aria-label="主导航">
+      <a href="#search">词条检索</a>
+      <a href="#entries">词条分类</a>
+      <a href="#howto">收录说明</a>
+      <a href="#hot">热梗速览</a>
+      <a href="#about">关于本站</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 首屏 -->
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+          B站社区文化词条入口
+        </span>
+        <h1><span class="hl">b站百科</span></h1>
+        <p class="lede">
+          一个UP主从哪条视频走红、一句弹幕梗最早出自哪个区、某个直播名场面为什么被反复剪辑——这些在弹幕里滚过的问题，都值得有一条能读清楚的记录。b站百科按词条整理UP主资料、梗的出处与社区文化现象，让模糊的印象变成可查的条目。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#search">
+            检索词条
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a class="btn btn-ghost" href="#entries">浏览词条分类</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>UP主</strong>账号与代表作条目</div>
+          <div><strong>梗词条</strong>出处与流行时间</div>
+          <div><strong>分区</strong>按内容领域归类</div>
+        </div>
+      </div>
+
+      <aside class="feature-card" aria-label="词条示例">
+        <div class="fc-head">
+          <span>词条速览</span>
+          <span class="dot-row" aria-hidden="true">
+            <i style="background:#fb7299"></i>
+            <i style="background:#ffc94d"></i>
+            <i style="background:#00a1d6"></i>
+          </span>
+        </div>
+        <div class="fc-body">
+          <div class="mini-row">
+            <span class="ic" style="background:#e8f5fb">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b6f96" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"></path></svg>
+            </span>
+            <div><b>UP主条目</b><span>账号定位、代表作品与成名节点</span></div>
+          </div>
+          <div class="mini-row">
+            <span class="ic" style="background:#fff0f4">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fb7299" stroke-width="2" stroke-linecap="round"><path d="M4 5h16v11H8l-4 4z"></path></svg>
+            </span>
+            <div><b>梗词条</b><span>原始出处、走红路径与使用场景</span></div>
+          </div>
+          <div class="mini-row">
+            <span class="ic" style="background:#eef7ee">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3f9d5f" stroke-width="2" stroke-linecap="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"></path></svg>
+            </span>
+            <div><b>文化现象</b><span>弹幕礼仪、分区文化与年度热词</span></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- 检索 -->
+  <section id="search">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Entry Search</span>
+        <h2>在b站百科里查找一条词条</h2>
+        <p>输入UP主昵称、梗的说法或分区名，页面会给出对应的收录方向。词条以站内分类条目呈现，检索结果指向下方分类卡片，便于继续阅读。</p>
+      </div>
+
+      <div class="search-panel">
+        <form class="search-bar" id="searchForm" role="search">
+          <input type="search" id="searchInput" placeholder="例如：UP主、弹幕梗、鬼畜区、直播名场面" aria-label="输入词条关键词">
+          <button type="submit">查找词条</button>
+        </form>
+        <div class="chips" aria-label="常用搜索">
+          <button type="button" data-q="UP主">UP主资料</button>
+          <button type="button" data-q="梗">梗的出处</button>
+          <button type="button" data-q="鬼畜">鬼畜区</button>
+          <button type="button" data-q="直播">直播名场面</button>
+          <button type="button" data-q="弹幕">弹幕文化</button>
+        </div>
+        <p class="result-note" id="resultNote">尚未输入关键词。可先浏览下方词条分类，了解b站百科的收录范围。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 词条分类 -->
+  <section id="entries" style="padding-top:0;">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Categories</span>
+        <h2>词条分类：从人物到梗的来源</h2>
+        <p>b站百科把内容分成几类独立条目，每类回答一个不同的问题：这个人是谁、这个梗从哪来、这个分区形成了什么习惯。分类之间互相引用，方便顺着线索继续读。</p>
+      </div>
+
+      <div class="cards" id="cardGrid">
+        <article class="card" data-keys="UP主 账号 创作者 代表作 走红">
+          <span class="tag">人物条目</span>
+          <h3>UP主资料条目</h3>
+          <p>记录一位创作者的账号定位、内容方向与代表作。侧重说明其被社区记住的原因，例如某类视频的持续更新，或一次被广泛搬运的创作。资料以公开可见的账号信息与作品为依据。</p>
+          <div class="meta">关注点：账号定位 · 代表作 · 内容风格</div>
+        </article>
+
+        <article class="card" data-keys="梗 出处 弹幕 走红 热词">
+          <span class="tag">梗词条</span>
+          <h3>热门梗与出处</h3>
+          <p>解释一句台词、一个表情或一段剪辑为何流行。词条会交代最早出现的场合、传播路径和常见误用，帮助访问者在使用时避免把出处张冠李戴。流行程度随时间变化，词条注明记录时点。</p>
+          <div class="meta">关注点：原始出处 · 传播路径 · 用法</div>
+        </article>
+
+        <article class="card" data-keys="鬼畜 音乐 剪辑 分区">
+          <span class="tag">分区条目</span>
+          <h3>鬼畜与音乐区</h3>
+          <p>介绍以音频重组、画面循环为核心的创作类型，以及这类作品在站内形成的审美习惯。条目梳理常见手法与代表性作品类型，不评价单个作品优劣。</p>
+          <div class="meta">关注点：创作手法 · 作品类型 · 分区习惯</div>
+        </article>
+
+        <article class="card" data-keys="直播 名场面 切片 主播">
+          <span class="tag">直播条目</span>
+          <h3>直播名场面与切片</h3>
+          <p>直播内容以切片形式二次传播，一段对话或一次意外反应常成为新梗起点。本类条目记录名场面的发生场景、切片流传过程，以及它与后续梗词条之间的引用关系。</p>
+          <div class="meta">关注点：发生场景 · 切片来源 · 后续影响</div>
+        </article>
+
+        <article class="card" data-keys="弹幕 文化 礼仪 社区">
+          <span class="tag">社区条目</span>
+          <h3>弹幕文化与社区礼仪</h3>
+          <p>弹幕不只是评论，也是一种观看方式。条目整理常见弹幕用语的含义、使用时机与社区约定俗成的礼貌边界，说明哪些表达属于玩梗，哪些容易被理解为冒犯。</p>
+          <div class="meta">关注点：弹幕用语 · 使用时机 · 社区约定</div>
+        </article>
+
+        <article class="card" data-keys="年度 热词 盘点 文化 现象">
+          <span class="tag">现象条目</span>
+          <h3>年度热词与文化现象</h3>
+          <p>把零散的梗放回时间线上，观察某一年的表达偏好如何形成。条目按年份归集热词，说明其来源分区和跨圈层扩散的情况，便于对照不同年份的社区语汇变化。</p>
+          <div class="meta">关注点：年份归集 · 来源分区 · 扩散范围</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 收录说明 -->
+  <section id="howto" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How Entries Are Built</span>
+        <h2>一条b站百科词条是怎样写成的</h2>
+        <p>词条的价值在于可核对。b站百科的每一条记录都尽量给出信息来源与记录时点，让读者能自行判断内容是否仍然成立。</p>
+      </div>
+
+      <div class="split">
+        <div class="panel">
+          <h3>写作原则</h3>
+          <p>先确认对象：是一条梗、一个人，还是一种现象。对象不同，条目结构也不同，梗词条重出处，人物条目重作品，现象条目重时间线。</p>
+          <p>再确认边界：只写能被公开资料支持的部分。涉及具体日期、账号名与作品名时，按资料原有表述记录，不推测未公开的信息，也不把个别说法当成定论。</p>
+          <p>最后标注状态：流行度会变化，词条注明记录时点，读者看到的内容反映的是当时的情况，而不是永久结论。</p>
+        </div>
+
+        <div class="panel">
+          <h3>收录流程</h3>
+          <ol class="steps">
+            <li><strong>提出词条</strong>从弹幕、评论或搜索里发现一个反复出现的说法，确认它值得单独解释。</li>
+            <li><strong>追溯出处</strong>找到最早可查的公开来源，区分原始出处与后来的二次传播。</li>
+            <li><strong>撰写条目</strong>用简洁语言说明含义、来源与使用场景，避免评价性表述。</li>
+            <li><strong>交叉引用</strong>与相关UP主条目、分区条目互相链接，形成可继续阅读的路径。</li>
+            <li><strong>定期复核</strong>核对链接与表述是否仍然有效，必要时补充记录时点说明。</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 热梗速览 -->
+  <section id="hot">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Quick Index</span>
+        <h2>热梗速览：先看条目方向</h2>
+        <p>下面列出b站百科中常见的几类检索方向，点开对应分类即可看到条目结构。具体梗的完整词条以分类页中的记录为准。</p>
+      </div>
+
+      <div class="rank-list">
+        <div class="rank-item">
+          <span class="rank-no">01</span>
+          <div>
+            <h4>弹幕刷屏类说法</h4>
+            <p>短时间内大量重复出现的短句，往往与某个画面或音效绑定。词条重点说明触发条件与首次出现的场合。</p>
+          </div>
+          <span class="badge">梗词条</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-no">02</span>
+          <div>
+            <h4>UP主口头禅与固定开场</h4>
+            <p>长期更新形成的语言习惯，被观众提炼成短标签。词条记录其形成过程与被观众接受的方式。</p>
+          </div>
+          <span class="badge">人物条目</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-no">03</span>
+          <div>
+            <h4>直播切片中的即时反应</h4>
+            <p>未经设计的真实反应常比脚本更有传播力。条目交代场景、切片来源与后续被引用的方式。</p>
+          </div>
+          <span class="badge">直播条目</span>
+        </div>
+        <div class="rank-item">
+          <span class="rank-no">04</span>
+          <div>
+            <h4>跨分区扩散的年度热词</h4>
+            <p>从一个分区起步，逐渐出现在其他内容里。词条按时间顺序记录扩散节点，说明语汇迁移的过程。</p>
+          </div>
+          <span class="badge">现象条目</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 关于 -->
+  <section id="about" style="padding-top:0;">
+    <div class="wrap">
+      <div class="split">
+        <div class="panel">
+          <h3>关于b站百科</h3>
+          <p>b站百科是一个面向B站观众的内容整理站点，把弹幕与评论区里反复出现的问题，整理成有出处、有边界、可继续阅读的条目。网站不提供视频播放，也不代替官方账号信息。</p>
+          <p>如果你在使用某个说法时不确定它从哪来，可以先在b站百科里检索一次，再决定是否沿用。词条的作用是减少误解，而不是给梗下定义。</p>
+        </div>
+        <div class="panel">
+          <h3>资料与下载</h3>
+          <p>站内条目依据公开可见的账号信息、作品页面与社区讨论整理，记录时点会随条目更新。涉及具体数字与日期的表述，以当时可查的公开资料为限。</p>
+          <p>需要离线保存条目结构时，可下载词条分类模板，按同一格式补充自己的记录。</p>
+          <p style="margin-top:16px;">
+            <a class="btn btn-ghost" href="#" data-download-placeholder="true" aria-disabled="true" tabindex="-1" style="pointer-events:none;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v11M7 11l5 5 5-5M4 20h16"></path></svg>
+              下载词条模板
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">
+          <span class="mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="6" width="18" height="14" rx="3"></rect>
+              <path d="M7 3l2.5 3M17 3l-2.5 3"></path>
+            </svg>
+          </span>
+          b站百科
+        </div>
+        <p>整理B站UP主资料、热门梗出处与社区文化现象，让每个在弹幕里滚过的问题都有据可查。内容以公开资料为依据，注明记录时点。</p>
+      </div>
+      <div>
+        <h5>内容导航</h5>
+        <ul>
+          <li><a href="#search">词条检索</a></li>
+          <li><a href="#entries">词条分类</a></li>
+          <li><a href="#howto">收录说明</a></li>
+          <li><a href="#hot">热梗速览</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>条目类型</h5>
+        <ul>
+          <li><a href="#entries">UP主资料条目</a></li>
+          <li><a href="#entries">热门梗与出处</a></li>
+          <li><a href="#entries">直播名场面</a></li>
+          <li><a href="#entries">年度热词</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      <span>b站百科 · 社区文化词条整理</span>
+      <span>内容随资料更新，具体表述以条目记录时点为准</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var form = document.getElementById('searchForm');
+    var input = document.getElementById('searchInput');
+    var note = document.getElementById('resultNote');
+    var cards = Array.prototype.slice.call(document.querySelectorAll('#cardGrid .card'));
+
+    function runSearch(q){
+      q = (q || '').trim();
+      if(!q){
+        cards.forEach(function(c){ c.style.display = ''; });
+        note.textContent = '尚未输入关键词。可先浏览下方词条分类，了解b站百科的收录范围。';
+        return;
+      }
+      var hit = [];
+      cards.forEach(function(c){
+        var keys = (c.getAttribute('data-keys') || '') + ' ' + c.textContent;
+        if(keys.toLowerCase().indexOf(q.toLowerCase()) > -1){
+          c.style.display = '';
+          hit.push(c.querySelector('h3').textContent);
+        }else{
+          c.style.display = 'none';
+        }
+      });
+      if(hit.length){
+        note.textContent = '找到 ' + hit.length + ' 类相关词条：' + hit.join('、') + '。已在上方分类中筛选显示。';
+      }else{
+        cards.forEach(function(c){ c.style.display = ''; });
+        note.textContent = '暂未匹配到“' + q + '”相关词条，已恢复显示全部词条分类。可换个说法再试，例如“UP主”或“弹幕”。';
+      }
+    }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      runSearch(input.value);
+    });
+
+    input.addEventListener('input', function(){
+      if(!input.value.trim()){ runSearch(''); }
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.chips button'), function(b){
+      b.addEventListener('click', function(){
+        input.value = b.getAttribute('data-q');
+        runSearch(input.value);
+      });
+    });
+  })();
+</script>
+</body>
+  </html>
